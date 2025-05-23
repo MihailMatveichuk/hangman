@@ -1,0 +1,14 @@
+import { createModal } from '../../templates/createModal';
+import { toggleModalRules } from '../toggleModalRules';
+import { showInstList } from '../showInstList';
+
+import '../../styles/style.css';
+import '../../styles/button-start.css';
+
+const toggleModalButton = document.querySelector('.button1');
+const modalContainer = document.getElementById('modal');
+modalContainer.innerHTML = createModal();
+const toggleButton = document.querySelector('.fa-brands.fa-instagram');
+toggleButton.addEventListener('click', showInstList);
+
+toggleModalButton.addEventListener('click', toggleModalRules);
