@@ -1,95 +1,93 @@
-import { checkIsFindGuessedWord } from "./checkIsFindGuessedWord.js";
-import { getRandomWord } from "./getRandomWord.js";
-import { updateImage } from "./hangmanImageUpdater.js";
-import { showLoseModal } from "./showLoseModal.js";
-import { showWinModal } from "./showWinModal.js";
+import { checkIsFindGuessedWord } from './checkIsFindGuessedWord.js';
+import { getRandomWord } from './getRandomWord.js';
+import { updateImage } from './hangmanImageUpdater.js';
+import { showLoseModal } from './showLoseModal.js';
+import { showWinModal } from './showWinModal.js';
 
 let maxAttempts = 7;
 let currentAttempts = maxAttempts;
-const headerContent = document.querySelector(".header-content");
+const headerContent = document.querySelector('.header-content');
 
 export function createAttemptCounter() {
-    const counterDiv = document.createElement("div");
-    counterDiv.id = "attempt-counter";
-
-    console.log(`Создан счетчик попыток: ${currentAttempts} попыток`);
-    headerContent.appendChild(counterDiv);
+  const counterDiv = document.createElement('div');
+  counterDiv.id = 'attempt-counter';
+  headerContent.appendChild(counterDiv);
 }
 
 export function updateAttemptCounter() {
-    const counterDiv = document.getElementById("attempt-counter");
-    if (counterDiv) {
-        counterDiv.textContent = `Number of attempts: ${currentAttempts}`;
-    }
+  const counterDiv = document.getElementById('attempt-counter');
+  if (counterDiv) {
+    counterDiv.textContent = `Number of attempts: ${currentAttempts}`;
+  }
 }
 
 export function decrementAttempts() {
-    if (currentAttempts > 0) {
-        currentAttempts--;
-        updateAttemptCounter();
-        updateImage(currentAttempts);
-    }
+  if (currentAttempts > 0) {
+    currentAttempts--;
+    updateAttemptCounter();
+    updateImage(currentAttempts);
+  }
 }
 
 export function resetAttempts() {
-    currentAttempts = maxAttempts;
-    updateAttemptCounter();
+  currentAttempts = maxAttempts;
+  updateAttemptCounter();
 }
 
 export function getCurrentAttempts() {
-    return currentAttempts;
+  return currentAttempts;
 }
 
 getRandomWord();
 
 export function checkLetterInWord(letter) {
-    const generatedWord = localStorage.getItem("questWord");
+  const generatedWord = localStorage.getItem('questWord');
 
-    if (!generatedWord) {
-        console.error("Загаданное слово не найдено в localStorage.");
-        return false;
-    }
+  if (!generatedWord) {
+    console.error('Загаданное слово не найдено в localStorage.');
+    return false;
+  }
 
-    return generatedWord.toLowerCase().includes(letter.toLowerCase());
+  return generatedWord.toLowerCase().includes(letter.toLowerCase());
 }
 
 let guessedLetters = new Set();
 
 const handleGuess = (letter) => {
-    guessedLetters.add(letter);
+  guessedLetters.add(letter);
 
-    if (checkLetterInWord(letter)) {
-        const isGuessedWord = checkIsFindGuessedWord();
+  if (checkLetterInWord(letter)) {
+    const isGuessedWord = checkIsFindGuessedWord();
 
-        console.log(`Буква "${letter}" есть в слове!`);
-        if (isGuessedWord) {
-            console.log(true);
+    console.log(`Буква "${letter}" есть в слове!`);
+    if (isGuessedWord) {
+      console.log(true);
 
-            showWinModal();
-        }
-    } else {
-        console.log(`Буква "${letter}" отсутствует в слове.`);
-        decrementAttempts();
-
-        if (getCurrentAttempts() <= 0) {
-            showLoseModal();
-        }
+      showWinModal();
     }
+  } else {
+    console.log(`Буква "${letter}" отсутствует в слове.`);
+    decrementAttempts();
+
+    if (getCurrentAttempts() <= 0) {
+      showLoseModal();
+    }
+  }
 };
 
 createAttemptCounter();
 
-document.addEventListener("DOMContentLoaded", () => {
-    const letterButtons = document.querySelectorAll(".alphabet-button");
+document.addEventListener('DOMContentLoaded', () => {
+  const letterButtons = document.querySelectorAll('.alphabet-button');
 
-    if (letterButtons.length === 0) {
-        console.error("Нет кнопок с классом '.alphabet-button'.");
-    } else {
-        letterButtons.forEach((button) => {
-            button.addEventListener("click", () => {
-                const letter = button.textContent.trim().toUpperCase();
-                handleGuess(letter);
-            });
-        });
-    }
+  if (letterButtons.length === 0) {
+    console.error("Нет кнопок с классом '.alphabet-button'.");
+  } else {
+    letterButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const letter = button.textContent.trim().toUpperCase();
+        handleGuess(letter);
+      });
+    });
+  }
 });
